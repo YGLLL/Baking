@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<litepal>
+    <dbname value="baking"></dbname>
+    <version value="2"></version>
+    <list>
+        <mapping class="com.example.ygl.baking.db.model.Recipe"></mapping>
+        <mapping class="com.example.ygl.baking.db.model.Step"></mapping>
+    </list>
+</litepal>
