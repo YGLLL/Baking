@@ -9,6 +9,7 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
@@ -16,8 +17,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.ygl.baking.Util.GsonModel.RecipeModel;
-import com.example.ygl.baking.db.model.Recipe;
-import com.example.ygl.baking.db.model.Step;
+import com.example.ygl.baking.sql.StubProvider;
+import com.example.ygl.baking.sql.model.Recipe;
+import com.example.ygl.baking.sql.model.Step;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -90,7 +92,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     /*
      * Put the data transfer code here.
      */
-        Log.i(TAG,"onPerformSync is run!!!!!!!!!");
+        Log.i(TAG,"onPerformSync is run");
         final String urlstr="http://go.udacity.com/android-baking-app-json";
         netWork(urlstr);
     }
@@ -110,6 +112,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     }
                 }catch (IOException e){
                     Log.i("netWork","we have a Error:"+e);
+                    Log.i("netWork","try again now");
+                    netWork(string);
                 }
             }
         }).start();
@@ -162,20 +166,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 step.save();
             }
         }
-        Log.i(TAG,"ALL DONE!!!!Data input SQL");
-        test();
+        //通知,数据库发生变化
+        noticeSQLChange();
+        Log.i(TAG,"Data input SQL");
     }
 
-    private void test(){
-        List<Step> list=DataSupport.findAll(Step.class);
-        for(Step step:list){
-            Log.i(TAG+"SQLtest","ForRecipe:"+step.getForRecipe()+"\n"
-                    +"StepId:"+step.getStepId()+"\n"
-                    +"StepTitle:"+step.getStepTitle()+"\n"
-                    +"Description:"+step.getDescription()+"\n"
-                    +"VideoUrl:"+step.getVideoUrl()+"\n"
-            );
-        }
+    public void noticeSQLChange(){
+        ContentValues[] cvArray = new ContentValues[1];
+        getContext().getContentResolver().bulkInsert(StubProvider.bakingUri,cvArray);
     }
 
     /**

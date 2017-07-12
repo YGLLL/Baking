@@ -38,7 +38,7 @@
                 android:resource="@xml/syncadapter" />
         </service>
         <provider
-            android:name="com.example.ygl.baking.db.StubProvider"
+            android:name="com.example.ygl.baking.sql.StubProvider"
             android:authorities="com.example.ygl.baking"
             android:exported="false"
             android:syncable="true"/>

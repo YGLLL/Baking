@@ -1,4 +1,4 @@
-package com.example.ygl.baking.db.model;
+package com.example.ygl.baking.sql.model;
 
 import org.litepal.crud.DataSupport;
 
