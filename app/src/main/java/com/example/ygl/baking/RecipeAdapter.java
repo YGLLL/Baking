@@ -1,6 +1,7 @@
 package com.example.ygl.baking;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -41,7 +42,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+    public ViewHolder onCreateViewHolder(final ViewGroup parent,int viewType){
         if (mContext==null){
             mContext=parent.getContext();
         }
@@ -51,6 +52,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 //点击事件
+                Intent intent=new Intent(mContext,StepActivity.class);
+                intent.putExtra("RecipeName",
+                        recipeList.get(viewHolder.getAdapterPosition()).getRecipeName());
+                mContext.startActivity(intent);
             }
         });
         return viewHolder;

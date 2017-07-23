@@ -42,6 +42,8 @@
             android:authorities="com.example.ygl.baking"
             android:exported="false"
             android:syncable="true"/>
+        <activity android:name=".StepActivity"></activity>
+        <activity android:name=".DescriptionActivity"></activity>
     </application>
 
 </manifest>

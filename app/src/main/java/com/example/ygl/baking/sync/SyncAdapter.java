@@ -113,6 +113,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 }catch (IOException e){
                     Log.i("netWork","we have a Error:"+e);
                     Log.i("netWork","try again now");
+                    //危险
                     netWork(string);
                 }
             }
@@ -124,6 +125,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Gson gson=new Gson();
         Type type=new TypeToken<List<RecipeModel>>(){}.getType();
         List<RecipeModel> list=gson.fromJson(JsonStr,type);
+        int stepId=0;
         for(RecipeModel OneRecipe:list){
             //保存一个菜谱
             Recipe recipe=new Recipe();
@@ -144,18 +146,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             }
             Step IngredientsStep =new Step();
             IngredientsStep.setForRecipe(OneRecipe.name);
-            IngredientsStep.setStepId("0");
+            IngredientsStep.setStepId(String.valueOf(stepId++));
             IngredientsStep.setStepTitle("Ingredients");
             IngredientsStep.setDescription(DescriptionStr);
             IngredientsStep.save();
-
             //保存所有步骤
             List<RecipeModel.StepsModel> StepsList=OneRecipe.steps;
             for(RecipeModel.StepsModel OneSteps:StepsList){
                 Step step=new Step();
                 step.setForRecipe(OneRecipe.name);
-                int StepsId=OneSteps.id+1;
-                step.setStepId(String.valueOf(StepsId));
+                step.setStepId(String.valueOf(stepId++));
                 step.setStepTitle(OneSteps.shortDescription);
                 step.setDescription(OneSteps.description);
                 if(!TextUtils.isEmpty(OneSteps.videoURL)){
