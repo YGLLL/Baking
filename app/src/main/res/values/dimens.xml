@@ -17,10 +17,6 @@
     <dimen name="step_layout_padding">20dp</dimen>
     <dimen name="step_list_id_width">40dp</dimen>
 
-    <!--video player-->
-    <dimen name="video_player_width">300dp</dimen>
-    <dimen name="video_player_height">200dp</dimen>
-
     <!--fragment_description-->
     <dimen name="step_title_size">30sp</dimen>
     <dimen name="description_size">15sp</dimen>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="startOrPause" type="id"/>
+    <item name="progressTime" type="id"/>
+    <item name="endTime" type="id"/>
+    <item name="fullScreen" type="id"/>
+    <item name="fullStartOrPause" type="id"/>
+    <item name="fullProgressTime" type="id"/>
+    <item name="fullEndTime" type="id"/>
+    <item name="smallScreen" type="id"/>
+</resources>
