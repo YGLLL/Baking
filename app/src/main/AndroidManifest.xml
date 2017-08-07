@@ -10,7 +10,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +44,11 @@
             android:authorities="com.example.ygl.baking"
             android:exported="false"
             android:syncable="true"/>
-        <activity android:name=".StepActivity"></activity>
+        <activity
+            android:name=".StepActivity"
+            android:configChanges="orientation|screenSize"
+            >
+        </activity>
         <activity android:name=".DescriptionActivity"></activity>
         <activity android:name=".player.FullScreenActivity"></activity>
     </application>

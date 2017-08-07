@@ -49,6 +49,8 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
 
     private static final String TAG = "VideoPlayer";
 
+    private Context mContext;
+
     private SurfaceView surfaceView;
     private Button startOrPause;
     private TextView progressTime;
@@ -75,7 +77,11 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
 
     public synchronized static VideoPlayer getInstance(final Context context, int windowWidth, final String videoUrl){
         if(videoPlayer==null){
-            videoPlayer=new VideoPlayer(context,windowWidth,videoUrl);
+            if(context==null){
+                return null;
+            }else {
+                videoPlayer=new VideoPlayer(context,windowWidth,videoUrl);
+            }
         }
         return videoPlayer;
     }
@@ -83,16 +89,19 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
     private VideoPlayer(final Context context, int windowWidth, final String videoUrl) {
         super(context);
 
-        addPlayerView(context,windowWidth);
-
-        mediaPlayer = new MediaPlayer();
+        mContext=context;
         mTimer=new Timer();
+        mediaPlayer = new MediaPlayer();
+
+        addPlayerView(windowWidth);
 
         surfaceHolder=surfaceView.getHolder();
         surfaceHolder.addCallback(this);
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        this.videoUrl=videoUrl;
-        if (!TextUtils.isEmpty(this.videoUrl)){
+        seekBar.setOnSeekBarChangeListener(this);
+
+        if (!TextUtils.isEmpty(videoUrl)){
+            this.videoUrl=videoUrl;
             startOrPause.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -103,9 +112,9 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
             fullScreen.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(context,FullScreenActivity.class);
+                    Intent intent=new Intent(mContext,FullScreenActivity.class);
                     intent.putExtra("PLAYSTATE",PLAYSTATE);
-                    context.startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             });
             //开始更新进度条
@@ -113,29 +122,28 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         }else {
             Log.i(TAG,"isEmpty(stepList.get(0).getVideoUrl())");
         }
-        seekBar.setOnSeekBarChangeListener(this);
     }
 
     //动态添加控件
-    private void addPlayerView(Context context,int windowWidth){
+    private void addPlayerView(int windowWidth){
         this.setOrientation(LinearLayout.VERTICAL);
 
-        surfaceView=new SurfaceView(context);
+        surfaceView=new SurfaceView(mContext);
         LinearLayout.LayoutParams surfaceViewParams=new LinearLayout.LayoutParams(windowWidth,windowWidth*9/16);
         this.addView(surfaceView,surfaceViewParams);
 
-        RelativeLayout relativeLayout=new RelativeLayout(context);
+        RelativeLayout relativeLayout=new RelativeLayout(mContext);
         //50dp对应的px
         int relativeLayoutHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,50, getResources().getDisplayMetrics());
 
-        startOrPause=new Button(context);
+        startOrPause=new Button(mContext);
         startOrPause.setId(R.id.startOrPause);
         RelativeLayout.LayoutParams startOrPauseParams=new RelativeLayout.LayoutParams(relativeLayoutHeight,relativeLayoutHeight);
         startOrPauseParams.addRule(RelativeLayout.ALIGN_LEFT);
         startOrPauseParams.addRule(RelativeLayout.CENTER_VERTICAL);
         relativeLayout.addView(startOrPause,startOrPauseParams);
 
-        progressTime=new TextView(context);
+        progressTime=new TextView(mContext);
         progressTime.setText("00:00");
         progressTime.setId(R.id.progressTime);
         RelativeLayout.LayoutParams progressTimeParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -143,14 +151,14 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         progressTimeParams.addRule(RelativeLayout.CENTER_VERTICAL);
         relativeLayout.addView(progressTime,progressTimeParams);
 
-        seekBar=new SeekBar(context);
+        seekBar=new SeekBar(mContext);
         RelativeLayout.LayoutParams seekBarParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         seekBarParams.addRule(RelativeLayout.RIGHT_OF,R.id.progressTime);
         seekBarParams.addRule(RelativeLayout.LEFT_OF,R.id.endTime);
         seekBarParams.addRule(RelativeLayout.CENTER_VERTICAL);
         relativeLayout.addView(seekBar,seekBarParams);
 
-        endTime=new TextView(context);
+        endTime=new TextView(mContext);
         endTime.setText("00:00");
         endTime.setId(R.id.endTime);
         RelativeLayout.LayoutParams endTimeParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -158,7 +166,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         endTimeParams.addRule(RelativeLayout.CENTER_VERTICAL);
         relativeLayout.addView(endTime,endTimeParams);
 
-        fullScreen=new Button(context);
+        fullScreen=new Button(mContext);
         fullScreen.setId(R.id.fullScreen);
         fullScreen.setBackgroundResource(R.drawable.full);
         RelativeLayout.LayoutParams fullScreenParams=new RelativeLayout.LayoutParams(relativeLayoutHeight,relativeLayoutHeight);
@@ -167,25 +175,6 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         relativeLayout.addView(fullScreen,fullScreenParams);
 
         this.addView(relativeLayout);
-    }
-
-    private void updateButtonBackground(){
-        if(startOrPause!=null){
-            switch (PLAYSTATE){
-                case STOPPLAY:
-                    startOrPause.setBackgroundResource(R.drawable.start);
-                    break;
-                case STARTPLAY:
-                    startOrPause.setBackgroundResource(R.drawable.pause);
-                    break;
-                case PAUSEPLAY:
-                    startOrPause.setBackgroundResource(R.drawable.start);
-                    break;
-                case CONTINUEPLAY:
-                    startOrPause.setBackgroundResource(R.drawable.pause);
-                    break;
-            }
-        }
     }
 
     /*******************************************************
@@ -240,6 +229,25 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
             case CONTINUEPLAY:
                 pausePlay();
                 break;
+        }
+    }
+
+    private void updateButtonBackground(){
+        if(startOrPause!=null){
+            switch (PLAYSTATE){
+                case STOPPLAY:
+                    startOrPause.setBackgroundResource(R.drawable.start);
+                    break;
+                case STARTPLAY:
+                    startOrPause.setBackgroundResource(R.drawable.pause);
+                    break;
+                case PAUSEPLAY:
+                    startOrPause.setBackgroundResource(R.drawable.start);
+                    break;
+                case CONTINUEPLAY:
+                    startOrPause.setBackgroundResource(R.drawable.pause);
+                    break;
+            }
         }
     }
 

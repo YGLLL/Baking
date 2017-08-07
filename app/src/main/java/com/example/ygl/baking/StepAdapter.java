@@ -1,5 +1,6 @@
 package com.example.ygl.baking;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import java.util.List;
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
     private Context mContext;
     private List<Step> stepList;
+    private Boolean isLand=false;
     private static final String TAG = "StepAdapter";
 
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -36,6 +38,10 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
     public StepAdapter(List<Step> list){
         stepList=list;
     }
+    public StepAdapter(Boolean isLand,List<Step> list){
+        this.isLand=isLand;
+        stepList=list;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
@@ -45,15 +51,23 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
 
         View view= LayoutInflater.from(mContext).inflate(R.layout.item_step,parent,false);
         final ViewHolder viewHolder=new ViewHolder(view);
-        viewHolder.stepLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Do string
-                Intent intent=new Intent(mContext,DescriptionActivity.class);
-                intent.putExtra("StepId",stepList.get(viewHolder.getAdapterPosition()).getStepId());
-                mContext.startActivity(intent);
-            }
-        });
+        if(isLand){
+            viewHolder.stepLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction =new FragmentTransaction();
+                }
+            });
+        }else {
+            viewHolder.stepLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(mContext,DescriptionActivity.class);
+                    intent.putExtra("StepId",stepList.get(viewHolder.getAdapterPosition()).getStepId());
+                    mContext.startActivity(intent);
+                }
+            });
+        }
         return viewHolder;
     }
 

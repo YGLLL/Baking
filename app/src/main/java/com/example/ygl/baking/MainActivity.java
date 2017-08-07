@@ -3,14 +3,19 @@ package com.example.ygl.baking;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.example.ygl.baking.sql.StubProvider;
 import com.example.ygl.baking.sql.model.Recipe;
@@ -29,8 +34,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView=(RecyclerView) findViewById(R.id.recycler_view);
+        //600dp对应的px
+        int dp=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,600, getResources().getDisplayMetrics());
+        //屏幕横向的px
+        DisplayMetrics displayMetrics=getResources().getDisplayMetrics();
+        int widthPx=displayMetrics.widthPixels;
+
         GridLayoutManager layoutManager=new GridLayoutManager(this,1);
+        if(widthPx>=dp){
+            //强制横屏
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }else {
+            //强制竖屏
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        if(getRequestedOrientation()== ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+            layoutManager=new GridLayoutManager(this,3);
+        }
+        if(getRequestedOrientation()== ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+            layoutManager=new GridLayoutManager(this,1);
+        }
+
+        recyclerView=(RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(layoutManager);
 
         recipeList= DataSupport.findAll(Recipe.class);
@@ -60,5 +85,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
     @Override
     public void onLoaderReset(Loader<Cursor> loader){
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        //屏幕方向改变需要做的事
     }
 }
