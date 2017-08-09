@@ -22,7 +22,8 @@ import java.util.List;
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
     private Context mContext;
     private List<Step> stepList;
-    private Boolean isLand=false;
+    private ReplaceFragment replaceFragment=null;
+    private View oldSelectedStep;
     private static final String TAG = "StepAdapter";
 
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -38,9 +39,12 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
     public StepAdapter(List<Step> list){
         stepList=list;
     }
-    public StepAdapter(Boolean isLand,List<Step> list){
-        this.isLand=isLand;
+    public StepAdapter(ReplaceFragment replaceFragment,List<Step> list){
+        this.replaceFragment=replaceFragment;
         stepList=list;
+
+        //一开始就加载第一个页面
+        replaceFragment.replaceFragment(stepList.get(0).getStepId());
     }
 
     @Override
@@ -49,13 +53,15 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
             mContext=parent.getContext();
         }
 
-        View view= LayoutInflater.from(mContext).inflate(R.layout.item_step,parent,false);
+        final View view= LayoutInflater.from(mContext).inflate(R.layout.item_step,parent,false);
         final ViewHolder viewHolder=new ViewHolder(view);
-        if(isLand){
+        //String stepId=stepList.get(viewHolder.getAdapterPosition()).getStepId();
+        if(replaceFragment!=null){
             viewHolder.stepLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentTransaction transaction =new FragmentTransaction();
+                    changeColor(view);
+                    replaceFragment.replaceFragment(stepList.get(viewHolder.getAdapterPosition()).getStepId());
                 }
             });
         }else {
@@ -63,7 +69,8 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(mContext,DescriptionActivity.class);
-                    intent.putExtra("StepId",stepList.get(viewHolder.getAdapterPosition()).getStepId());
+                    intent.putExtra("StepId",stepList.get(viewHolder.getAdapterPosition()).getStepId()
+                    );
                     mContext.startActivity(intent);
                 }
             });
@@ -79,4 +86,16 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
 
     @Override
     public int getItemCount(){return stepList.size();}
+
+    private void changeColor(View selectedStep){
+        if(oldSelectedStep!=null){
+            oldSelectedStep.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        }
+        selectedStep.setBackgroundColor(mContext.getResources().getColor(R.color.green));
+        oldSelectedStep=selectedStep;
+    }
+
+    public interface ReplaceFragment{
+        void replaceFragment(String stepId);
+    }
 }

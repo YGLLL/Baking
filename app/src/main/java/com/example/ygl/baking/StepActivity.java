@@ -87,13 +87,7 @@ public class StepActivity extends AppCompatActivity {
             //告诉StepFragment现在是平板电脑横屏模式
             fragmentBundle.putBoolean("IsLand",true);
             stepFragment.setArguments(fragmentBundle);
-            transaction.add(R.id.step_list,stepFragment);
-            //多添加一个description碎片
-            DescriptionFragment descriptionFragment=new DescriptionFragment();
-            Bundle descriptionFragmentBundle=new Bundle();
-            descriptionFragmentBundle.putString("StepId","1");
-            descriptionFragment.setArguments(descriptionFragmentBundle);
-            transaction.add(R.id.description,descriptionFragment).commit();
+            transaction.add(R.id.step_list,stepFragment).commit();
         }
     }
 
