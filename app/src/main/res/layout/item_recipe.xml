@@ -33,7 +33,7 @@
                 android:id="@+id/recipe_servings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Servings:"
+                android:text="@string/Servings"
                 android:layout_alignLeft="@id/recipe_name"
                 android:layout_below="@id/recipe_name"/>
         </RelativeLayout>

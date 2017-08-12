@@ -91,7 +91,8 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
         if(oldSelectedStep!=null){
             oldSelectedStep.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         }
-        selectedStep.setBackgroundColor(mContext.getResources().getColor(R.color.green));
+        selectedStep.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+
         oldSelectedStep=selectedStep;
     }
 

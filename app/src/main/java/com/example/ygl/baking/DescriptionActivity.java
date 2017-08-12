@@ -1,11 +1,10 @@
 package com.example.ygl.baking;
 
 import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -18,7 +17,7 @@ public class DescriptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_aescription);
+        setContentView(R.layout.activity_description);
 
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
@@ -32,6 +31,11 @@ public class DescriptionActivity extends AppCompatActivity {
         descriptionFragment.setArguments(fragmentBundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.frame_layout,descriptionFragment).commit();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

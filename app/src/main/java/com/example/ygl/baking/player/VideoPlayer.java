@@ -70,6 +70,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
     public static final int STARTPLAY=1;
     public static final int PAUSEPLAY=2;
     public static final int CONTINUEPLAY=3;
+    private int fullScreenState=0;
 
     private String videoUrl="";
 
@@ -106,7 +107,6 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
                 @Override
                 public void onClick(View v) {
                     play();
-                    updateButtonBackground();
                 }
             });
             fullScreen.setOnClickListener(new OnClickListener() {
@@ -271,16 +271,19 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
             }
         }).start();
         PLAYSTATE=STARTPLAY;
+        updateButtonBackground();
     }
 
     public void pausePlay() {
         mediaPlayer.pause();
         PLAYSTATE=PAUSEPLAY;
+        updateButtonBackground();
     }
 
     public void continuePlay() {
         mediaPlayer.start();
         PLAYSTATE=CONTINUEPLAY;
+        updateButtonBackground();
     }
 
     public void killSelf(){
@@ -292,10 +295,6 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-        Log.i(TAG, "surface changed");
-    }
-    @Override
     public void surfaceCreated(SurfaceHolder arg0) {
         Log.i(TAG,"public void surfaceCreated(SurfaceHolder arg0)");
         setPlayerDisplay(surfaceHolder);//设置播放载体
@@ -304,6 +303,15 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         mediaPlayer.setOnPreparedListener(this);//设置准备完毕监听器
         mediaPlayer.setOnCompletionListener(this);//设置播放完毕监听事件
         updateButtonBackground();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+        Log.i(TAG, "surface changed");
+        if (fullScreenState==VideoPlayer.STARTPLAY||fullScreenState==VideoPlayer.CONTINUEPLAY){
+            Log.i(TAG,"videoPlayer.continuePlay()");
+            videoPlayer.continuePlay();
+        }
     }
 
     //设置播放载体
@@ -357,8 +365,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
 
     //重全屏状态回归调用方法
     protected void fullScreenBlack(int state){
-        if (state==VideoPlayer.STARTPLAY||state==VideoPlayer.CONTINUEPLAY){
-            videoPlayer.continuePlay();
-        }
+        Log.i(TAG,"fullScreenBlack");
+        fullScreenState=state;
     }
 }

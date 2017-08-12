@@ -17,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.example.ygl.baking.Util.Util;
 import com.example.ygl.baking.sql.StubProvider;
 import com.example.ygl.baking.sql.model.Recipe;
 import com.example.ygl.baking.sync.SyncAdapter;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         //600dp对应的px
-        int dp=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,600, getResources().getDisplayMetrics());
+        int dp= Util.convertDipOrPx(this,600);
         //屏幕横向的px
         DisplayMetrics displayMetrics=getResources().getDisplayMetrics();
         int widthPx=displayMetrics.widthPixels;

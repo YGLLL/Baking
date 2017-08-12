@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.ygl.baking.Util.Util;
 import com.example.ygl.baking.player.VideoPlayer;
 import com.example.ygl.baking.sql.model.Step;
 
@@ -64,12 +65,12 @@ public class DescriptionFragment extends Fragment {
     }
 
     private void addDescriptionView(Step step){
-        //20dp
-        int dp=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,20, getResources().getDisplayMetrics());
+        //20dp对应的PX
+        int dp= Util.convertDipOrPx(mContext,20);
 
         //标题
         stepTitle=new TextView(mContext);
-        stepTitle.setTextSize(dp*2);
+        stepTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX,dp*2);
         stepTitle.setTextColor(getResources().getColor(R.color.dimgray));
         stepTitle.setText(step.getStepTitle());
         final LinearLayout.LayoutParams stepTitleParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -78,7 +79,7 @@ public class DescriptionFragment extends Fragment {
 
         //具体内容TextView
         description=new TextView(mContext);
-        description.setTextSize(dp);
+        description.setTextSize(TypedValue.COMPLEX_UNIT_PX,dp);
         description.setTextColor(getResources().getColor(R.color.dimgray));
         description.setText(step.getDescription());
         final LinearLayout.LayoutParams descriptionParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -89,7 +90,7 @@ public class DescriptionFragment extends Fragment {
         nextButton=new Button(mContext);
         nextButton.setText("Next");
         nextButton.setTextColor(getResources().getColor(R.color.colorAccent));
-        nextButton.setTextSize(dp);
+        nextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX,dp);
         nextButton.setBackgroundColor(getResources().getColor(R.color.white));
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +103,12 @@ public class DescriptionFragment extends Fragment {
                 fragmentBundle.putString("StepId",newStepId);
                 descriptionFragment.setArguments(fragmentBundle);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.description,descriptionFragment).commit();
+                if(getActivity().findViewById(R.id.description)!=null){
+                    transaction.replace(R.id.description,descriptionFragment).commit();
+                }
+                if(getActivity().findViewById(R.id.frame_layout)!=null){
+                    transaction.replace(R.id.frame_layout,descriptionFragment).commit();
+                }
             }
         });
         LinearLayout.LayoutParams nextButtonParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

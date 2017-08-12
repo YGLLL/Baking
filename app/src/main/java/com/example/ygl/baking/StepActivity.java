@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.example.ygl.baking.Util.Util;
 import com.example.ygl.baking.sql.model.Step;
 
 import org.litepal.crud.DataSupport;
@@ -36,9 +37,10 @@ public class StepActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
+        Log.i(TAG,"onCreate");
 
         //600dp对应的px
-        int dp=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,600, getResources().getDisplayMetrics());
+        int dp= Util.convertDipOrPx(this,600);
         //屏幕横向的px
         DisplayMetrics displayMetrics=getResources().getDisplayMetrics();
         int widthPx=displayMetrics.widthPixels;
@@ -94,6 +96,7 @@ public class StepActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig){
         super.onConfigurationChanged(newConfig);
+        Log.i(TAG,"onConfigurationChanged");
     }
 
     @Override

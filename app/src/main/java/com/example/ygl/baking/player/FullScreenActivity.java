@@ -2,6 +2,7 @@ package com.example.ygl.baking.player;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.ygl.baking.R;
+import com.example.ygl.baking.Util.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,10 +50,6 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        //设置横屏
-        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
         //隐藏状态栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
@@ -86,6 +84,9 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
     }
 
     private void addPlayerView(){
+        //50dp对应的px
+        int relativeLayoutHeight= Util.convertDipOrPx(this,50);
+
         LinearLayout linearLayout=new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams linearLayoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
@@ -95,12 +96,10 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
         int windowWidth=displayMetrics.widthPixels;
         int windowHeight=displayMetrics.heightPixels;
         Log.i(TAG,"windowWidth:"+windowWidth+"        windowHeight:"+windowHeight);
-        LinearLayout.LayoutParams surfaceViewParams=new LinearLayout.LayoutParams(windowWidth,windowHeight-150);
+        LinearLayout.LayoutParams surfaceViewParams=new LinearLayout.LayoutParams(windowWidth,windowHeight-relativeLayoutHeight);
         linearLayout.addView(surfaceView,surfaceViewParams);
 
         RelativeLayout relativeLayout=new RelativeLayout(this);
-        //50dp对应的px
-        int relativeLayoutHeight=(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,50, getResources().getDisplayMetrics());
         LinearLayout.LayoutParams relativeLayoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,relativeLayoutHeight);
         startOrPause=new Button(this);
         startOrPause.setId(R.id.fullStartOrPause);
@@ -195,23 +194,14 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
         return format.format(date);
     }
 
-    /**
-     * 设置为横屏
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG,"protected void onResume()");
-        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-    }
+
 
     @Override
-    protected void onPause(){
-        super.onPause();
+    protected void onStop(){
+        super.onStop();
+        Log.i("VideoPlayer","onStop()");
         if(videoPlayer!=null){
-            videoPlayer.pausePlay();
+           videoPlayer.pausePlay();
         }
     }
 
@@ -254,7 +244,8 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
 
     private void killSelf(int state){
         mTimer.cancel();
-        finish();
         videoPlayer.fullScreenBlack(state);
+        videoPlayer=null;
+        finish();
     }
 }
