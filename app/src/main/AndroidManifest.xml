@@ -3,6 +3,7 @@
     package="com.example.ygl.baking">
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"></uses-permission>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
@@ -54,6 +55,15 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".player.FullScreenActivity"
             android:screenOrientation="landscape"></activity>
+        <receiver android:name=".widget.BakingWidget">
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.example.ygl.baking.app.ACTION_DATA_UPDATED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_provider_info"/>
+        </receiver>
     </application>
 
 </manifest>

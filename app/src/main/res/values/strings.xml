@@ -1,4 +1,33 @@
 <resources>
     <string name="app_name">做蛋糕</string>
+    
+    <!--MainActivity-->
     <string name="Servings">Servings:</string>
+    <string name="net_work_status_key">net_work_status</string>
+    <string name="no_data_no_net_work">无法获取数据，没有网络，请准备好后点我刷新</string>
+    <string name="no_data_server_down">无法获取数据，服务器出现问题，点我刷新试试？</string>
+    <string name="no_data_server_time_out">无法获取数据，请求超时，点我刷新试试？</string>
+    <string name="no_data">无法获取数据，未知原因</string>
+    <string name="refresh">正在刷新...</string>
+    
+    <!--FullScreenActivity-->
+    <string name="zero_time">00:00</string>
+    <string name="simple_date_format">mm:ss</string>
+    <string name="play_state">PLAYSTATE</string>
+
+    <!--SyncAdapter-->
+    <string name="api_url">http://go.udacity.com/android-baking-app-json</string>
+    <string name="n">\n</string>
+    <string name="quantity">quantity:</string>
+    <string name="measure">measure:</string>
+    <string name="ingredient">ingredient:</string>
+    <string name="ingredients_title">Ingredients</string>
+
+    <string name="description_activity_title">Description</string>
+    <string name="step_id">StepId</string>
+    <string name="next_button">Next</string>
+
+    <string name="recip_name">RecipeName</string>
+
+    <string name="is_land">IsLand</string>
 </resources>

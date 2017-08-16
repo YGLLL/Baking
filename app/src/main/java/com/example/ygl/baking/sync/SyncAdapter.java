@@ -11,11 +11,15 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.ygl.baking.R;
 import com.example.ygl.baking.Util.GsonModel.RecipeModel;
 import com.example.ygl.baking.sql.StubProvider;
 import com.example.ygl.baking.sql.model.Recipe;
@@ -26,7 +30,12 @@ import com.google.gson.reflect.TypeToken;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Type;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -39,12 +48,14 @@ import static android.content.Context.ACCOUNT_SERVICE;
  * Handle the transfer of data between a server and an
  * app, using the Android sync adapter framework.
  */
+/**
+ * 重要!
+ */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     // Global variables
     // Define a variable to contain a content resolver instance
     ContentResolver mContentResolver;
     private static final String TAG = "SyncAdapter";
-
     // Constants
     // The authority for the sync adapter's content provider
     public static final String AUTHORITY = "com.example.ygl.baking";
@@ -52,6 +63,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String ACCOUNT_TYPE = "baking.ygl.example.com";
     // The account name
     public static final String ACCOUNT ="Baking";
+
+    //请求数据遇到问题接口
+    private static BadNews badNews;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NETWORK_STATUS_NO_NETWORK,NETWORK_STATUS_SERVER_DOWN,NETWORK_STATUS_SERVER_TIMEOUT})
+    public @interface NetWorkStatus {}
+
+    public static final int NETWORK_STATUS_NO_NETWORK=0;
+    public static final int NETWORK_STATUS_SERVER_DOWN=1;
+    public static final int NETWORK_STATUS_SERVER_TIMEOUT=2;
 
     /**
      * Set up the sync adapter
@@ -93,7 +115,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * Put the data transfer code here.
      */
         Log.i(TAG,"onPerformSync is run");
-        final String urlstr="http://go.udacity.com/android-baking-app-json";
+        final String urlstr=getContext().getString(R.string.api_url);
         netWork(urlstr);
     }
     private void netWork(final String string){
@@ -107,14 +129,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     Response response=client.newCall(request).execute();
                     final String responseData=response.body().string();
                     if (!TextUtils.isEmpty(responseData)){
+                        //连接正常
                         Log.i("netWork","OK!we have data!");
                         analysisJson(responseData);
+                    }else {
+                        //服务器停机
+                        setBadNews(NETWORK_STATUS_SERVER_DOWN);
                     }
                 }catch (IOException e){
-                    Log.i("netWork","we have a Error:"+e);
-                    Log.i("netWork","try again now");
-                    //危险
-                    netWork(string);
+                    Log.i(TAG,"we have a Error:"+e);
+                    if(e.getClass().getName().equals(SocketTimeoutException.class.getName())){
+                        //请求超时
+                        Log.i(TAG,"请求超时");
+                        setBadNews(NETWORK_STATUS_SERVER_TIMEOUT);
+                    }
+                    if(e.getClass().getName().equals(ConnectException.class.getName())||e.getClass().getName().equals(UnknownHostException.class.getName())){
+                        //没有网络
+                        setBadNews(NETWORK_STATUS_NO_NETWORK);
+                    }
                 }
             }
         }).start();
@@ -140,14 +172,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String DescriptionStr="";
             for (RecipeModel.IngredientsModel OneIngredients:IngredientsList){
                 DescriptionStr=DescriptionStr
-                        +"\n"+"quantity:"+OneIngredients.quantity
-                        +"\n"+"measure:"+OneIngredients.measure
-                        +"\n"+"ingredient:"+OneIngredients.ingredient;
+                        +getContext().getString(R.string.n)+getContext().getString(R.string.quantity)+OneIngredients.quantity
+                        +getContext().getString(R.string.n)+getContext().getString(R.string.measure)+OneIngredients.measure
+                        +getContext().getString(R.string.n)+getContext().getString(R.string.ingredient)+OneIngredients.ingredient+getContext().getString(R.string.n);
             }
             Step IngredientsStep =new Step();
             IngredientsStep.setForRecipe(OneRecipe.name);
             IngredientsStep.setStepId(String.valueOf(stepId++));
-            IngredientsStep.setStepTitle("Ingredients");
+            IngredientsStep.setStepTitle(getContext().getString(R.string.ingredients_title));
             IngredientsStep.setDescription(DescriptionStr);
             IngredientsStep.save();
             //保存所有步骤
@@ -171,6 +203,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         Log.i(TAG,"Data input SQL");
     }
 
+    //通知,数据库发生变化
     public void noticeSQLChange(){
         ContentValues[] cvArray = new ContentValues[1];
         getContext().getContentResolver().bulkInsert(StubProvider.bakingUri,cvArray);
@@ -234,4 +267,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         ContentResolver.requestSync(newAccount, AUTHORITY, bundle);
     }
+
+    private void setBadNews(@NetWorkStatus int netWorkStatus){
+        if (badNews!=null){
+            badNews.weHaveABadNews(netWorkStatus);
+        }
+    }
+
+    public interface BadNews{
+        void weHaveABadNews(@NetWorkStatus int netWorkStatus);
+    }
+    public static void setBadNewsCallBack(BadNews bn){badNews=bn;}
 }

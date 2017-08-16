@@ -20,4 +20,7 @@
     <!--fragment_description-->
     <dimen name="step_title_size">30sp</dimen>
     <dimen name="description_size">15sp</dimen>
+
+    <dimen name="empty_prompt_size">20sp</dimen>
+    <dimen name="empty_prompt_margin">20dp</dimen>
 </resources>

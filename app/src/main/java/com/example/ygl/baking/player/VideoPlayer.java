@@ -113,7 +113,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(mContext,FullScreenActivity.class);
-                    intent.putExtra("PLAYSTATE",PLAYSTATE);
+                    intent.putExtra(mContext.getString(R.string.play_state),PLAYSTATE);
                     mContext.startActivity(intent);
                 }
             });
@@ -144,7 +144,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         relativeLayout.addView(startOrPause,startOrPauseParams);
 
         progressTime=new TextView(mContext);
-        progressTime.setText("00:00");
+        progressTime.setText(R.string.zero_time);
         progressTime.setId(R.id.progressTime);
         RelativeLayout.LayoutParams progressTimeParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         progressTimeParams.addRule(RelativeLayout.RIGHT_OF,R.id.startOrPause);
@@ -159,7 +159,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
         relativeLayout.addView(seekBar,seekBarParams);
 
         endTime=new TextView(mContext);
-        endTime.setText("00:00");
+        endTime.setText(R.string.zero_time);
         endTime.setId(R.id.endTime);
         RelativeLayout.LayoutParams endTimeParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         endTimeParams.addRule(RelativeLayout.LEFT_OF,R.id.fullScreen);
@@ -210,7 +210,7 @@ public class VideoPlayer extends LinearLayout implements MediaPlayer.OnBuffering
     // 将毫秒数转换为时间格式
     private String progresstime(int progress) {
         Date date = new Date(progress);
-        SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat(mContext.getString(R.string.simple_date_format));
         return format.format(date);
     }
     //*****************************************************

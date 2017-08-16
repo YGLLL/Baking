@@ -34,10 +34,10 @@ public class StepFragment extends Fragment implements StepAdapter.ReplaceFragmen
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),1);
         recyclerView.setLayoutManager(layoutManager);
-        String recipeName=getArguments().getString("RecipeName");
+        String recipeName=getArguments().getString(getString(R.string.recip_name));
         List<Step> stepList= DataSupport.select("StepTitle","StepId").where("ForRecipe=?",recipeName).find(Step.class);
         StepAdapter stepAdapter;
-        if(getArguments().getBoolean("IsLand")){
+        if(getArguments().getBoolean(getString(R.string.is_land))){
             //平板电脑横屏模式
             stepAdapter=new StepAdapter(this,stepList);
             recyclerView.setBackgroundColor(getResources().getColor(R.color.white));
@@ -52,7 +52,7 @@ public class StepFragment extends Fragment implements StepAdapter.ReplaceFragmen
         DescriptionFragment description=new DescriptionFragment();
         //使用Bundle携带数据
         Bundle fragmentBundle=new Bundle();
-        fragmentBundle.putString("StepId",stepId);
+        fragmentBundle.putString(getString(R.string.step_id),stepId);
         description.setArguments(fragmentBundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.description,description).commit();

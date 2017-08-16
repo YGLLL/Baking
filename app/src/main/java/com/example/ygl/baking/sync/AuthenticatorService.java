@@ -12,6 +12,9 @@ import android.os.IBinder;
  * A bound Service that instantiates the authenticator
  * when started.
  */
+/**
+ * 不重要
+ */
 public class AuthenticatorService extends Service {
     // Instance field that stores the authenticator object
     private Authenticator mAuthenticator;

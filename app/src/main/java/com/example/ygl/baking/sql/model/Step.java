@@ -5,7 +5,7 @@ import org.litepal.crud.DataSupport;
 /**
  * Created by YGL on 2017/6/20.
  */
-
+//litepal需要的模型
 public class Step extends DataSupport {
     private String ForRecipe;
     private String StepId;

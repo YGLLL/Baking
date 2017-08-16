@@ -69,7 +69,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(mContext,DescriptionActivity.class);
-                    intent.putExtra("StepId",stepList.get(viewHolder.getAdapterPosition()).getStepId()
+                    intent.putExtra(mContext.getString(R.string.step_id),stepList.get(viewHolder.getAdapterPosition()).getStepId()
                     );
                     mContext.startActivity(intent);
                 }

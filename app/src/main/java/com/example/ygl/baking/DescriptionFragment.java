@@ -55,7 +55,7 @@ public class DescriptionFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        stepId=getArguments().getString("StepId");
+        stepId=getArguments().getString(getString(R.string.step_id));
         List<Step> stepList= DataSupport.select("StepTitle","Description","VideoUrl").where("StepId=?",stepId).find(Step.class);
         if(stepList.size()>0){
             addDescriptionView(stepList.get(0));
@@ -88,7 +88,7 @@ public class DescriptionFragment extends Fragment {
 
         //Next按键
         nextButton=new Button(mContext);
-        nextButton.setText("Next");
+        nextButton.setText(getString(R.string.next_button));
         nextButton.setTextColor(getResources().getColor(R.color.colorAccent));
         nextButton.setTextSize(TypedValue.COMPLEX_UNIT_PX,dp);
         nextButton.setBackgroundColor(getResources().getColor(R.color.white));
@@ -100,7 +100,7 @@ public class DescriptionFragment extends Fragment {
                 DescriptionFragment descriptionFragment=new DescriptionFragment();
                 //使用Bundle携带数据
                 Bundle fragmentBundle=new Bundle();
-                fragmentBundle.putString("StepId",newStepId);
+                fragmentBundle.putString(getString(R.string.step_id),newStepId);
                 descriptionFragment.setArguments(fragmentBundle);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 if(getActivity().findViewById(R.id.description)!=null){
@@ -116,13 +116,13 @@ public class DescriptionFragment extends Fragment {
         nextButtonParams.gravity=Gravity.CENTER_HORIZONTAL;
         nextButton.setLayoutParams(nextButtonParams);
 
-        String videoUrl=step.getVideoUrl();
+        final String videoUrl=step.getVideoUrl();
         if (!TextUtils.isEmpty(videoUrl)) {
             linearLayout.post(new Runnable() {
                 @Override
                 public void run() {
                     linearLayout.addView(stepTitle);
-                    videoPlayer=VideoPlayer.getInstance(mContext,linearLayout.getWidth(),"http://36.250.248.34/v.cctv.com/flash/mp4video6/TMS/2011/01/05/cf752b1c12ce452b3040cab2f90bc265_h264818000nero_aac32-1.mp4");
+                    videoPlayer=VideoPlayer.getInstance(mContext,linearLayout.getWidth(),videoUrl);
                     linearLayout.addView(videoPlayer);
                     linearLayout.addView(description);
                     linearLayout.addView(nextButton);

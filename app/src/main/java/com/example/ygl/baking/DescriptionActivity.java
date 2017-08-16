@@ -21,13 +21,13 @@ public class DescriptionActivity extends AppCompatActivity {
 
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
-            actionBar.setTitle("Description");
+            actionBar.setTitle(getString(R.string.description_activity_title));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         DescriptionFragment descriptionFragment=new DescriptionFragment();
         Bundle fragmentBundle=new Bundle();
-        fragmentBundle.putString("StepId",getIntent().getStringExtra("StepId"));
+        fragmentBundle.putString(getString(R.string.step_id),getIntent().getStringExtra(getString(R.string.step_id)));
         descriptionFragment.setArguments(fragmentBundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.frame_layout,descriptionFragment).commit();

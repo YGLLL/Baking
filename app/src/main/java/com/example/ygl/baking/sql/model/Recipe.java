@@ -7,7 +7,7 @@ import org.litepal.crud.DataSupport;
 /**
  * Created by YGL on 2017/6/20.
  */
-
+//litepal需要的模型
 public class Recipe extends DataSupport {
     private String RecipeId;
     private String RecipeName;

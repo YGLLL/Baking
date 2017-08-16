@@ -37,8 +37,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         }
     }
 
-    public RecipeAdapter(List<Recipe> list){
+    public RecipeAdapter(List<Recipe> list,View emptyPrompt){
         recipeList=list;
+        emptyPrompt.setVisibility(list.size()==0?View.VISIBLE:View.GONE);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             public void onClick(View v) {
                 //点击事件
                 Intent intent=new Intent(mContext,StepActivity.class);
-                intent.putExtra("RecipeName",
+                intent.putExtra(mContext.getString(R.string.recip_name),
                         recipeList.get(viewHolder.getAdapterPosition()).getRecipeName());
                 mContext.startActivity(intent);
             }

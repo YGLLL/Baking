@@ -109,7 +109,7 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
         relativeLayout.addView(startOrPause,startOrPauseParams);
 
         progressTime=new TextView(this);
-        progressTime.setText("00:00");
+        progressTime.setText(R.string.zero_time);
         progressTime.setId(R.id.fullProgressTime);
         RelativeLayout.LayoutParams progressTimeParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         progressTimeParams.addRule(RelativeLayout.RIGHT_OF,R.id.fullStartOrPause);
@@ -124,7 +124,7 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
         relativeLayout.addView(seekBar,seekBarParams);
 
         endTime=new TextView(this);
-        endTime.setText("00:00");
+        endTime.setText(R.string.zero_time);
         endTime.setId(R.id.fullEndTime);
         RelativeLayout.LayoutParams endTimeParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         endTimeParams.addRule(RelativeLayout.LEFT_OF,R.id.smallScreen);
@@ -190,7 +190,7 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
     // 将毫秒数转换为时间格式
     private String progresstime(int progress) {
         Date date = new Date(progress);
-        SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat(getString(R.string.simple_date_format));
         return format.format(date);
     }
 
@@ -218,7 +218,7 @@ public class FullScreenActivity extends AppCompatActivity implements SurfaceHold
         videoPlayer.setPlayerDisplay(surfaceHolder);
         //恢复播放
         Intent intent=getIntent();
-        int state=intent.getIntExtra("PLAYSTATE",-1);
+        int state=intent.getIntExtra(getString(R.string.play_state),-1);
         if (state==VideoPlayer.STARTPLAY||state==VideoPlayer.CONTINUEPLAY){
             videoPlayer.continuePlay();
         }

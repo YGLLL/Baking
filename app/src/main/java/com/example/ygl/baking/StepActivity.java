@@ -53,7 +53,7 @@ public class StepActivity extends AppCompatActivity {
         }
 
         Intent intent=getIntent();
-        String recipeName=intent.getStringExtra("RecipeName");
+        String recipeName=intent.getStringExtra(getString(R.string.recip_name));
 
         ActionBar actionBar=getSupportActionBar();
         if(actionBar!=null){
@@ -67,7 +67,7 @@ public class StepActivity extends AppCompatActivity {
             StepFragment stepFragment=new StepFragment();
             //使用Bundle携带数据
             Bundle fragmentBundle=new Bundle();
-            fragmentBundle.putString("RecipeName",recipeName);
+            fragmentBundle.putString(getString(R.string.recip_name),recipeName);
             stepFragment.setArguments(fragmentBundle);
             transaction.add(R.id.step_list,stepFragment).commit();
         }
@@ -85,9 +85,9 @@ public class StepActivity extends AppCompatActivity {
 
             StepFragment stepFragment=new StepFragment();
             Bundle fragmentBundle=new Bundle();
-            fragmentBundle.putString("RecipeName",recipeName);
+            fragmentBundle.putString(getString(R.string.recip_name),recipeName);
             //告诉StepFragment现在是平板电脑横屏模式
-            fragmentBundle.putBoolean("IsLand",true);
+            fragmentBundle.putBoolean(getString(R.string.is_land),true);
             stepFragment.setArguments(fragmentBundle);
             transaction.add(R.id.step_list,stepFragment).commit();
         }
