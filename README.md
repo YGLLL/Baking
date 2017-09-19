@@ -1,7 +1,7 @@
 优达学城纳米学位Android开发进阶
 # 烘培应用
 
-## 这是一款 Android 烘培应用，用户能够选择一个食谱，并观看视频教程
+这是一款 Android 烘培应用，用户能够选择一个食谱，并观看视频教程
 
 ## 界面展示
 ![](https://github.com/YGLLL/Baking/blob/master/screenshot/3.jpg)
