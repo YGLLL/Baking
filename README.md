@@ -2,6 +2,10 @@
 纳米学位Android开发进阶
 烘培应用
 
+![](https://github.com/YGLLL/Baking/blob/master/screenshot/1.jpg)
+![](https://github.com/YGLLL/Baking/blob/master/screenshot/2.jpg)
+![](https://github.com/YGLLL/Baking/blob/master/screenshot/3.jpg)
+
 共有3个Activity
 	MainActivity
 	StepActivity
